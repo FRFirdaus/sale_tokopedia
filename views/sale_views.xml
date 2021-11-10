@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sale_order_list_quotation_tokopedia_inherit">
+            <field name="name">sale.order.tokopedia.quotation.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="tokopedia_order"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_order_list_order_tokopedia_inherit">
+            <field name="name">sale.order.tokopedia.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="tokopedia_order"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_order_tokopedia_inherit">
+            <field name="name">sale.order.tokopedia.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button 
+                        name="button_tokopedia_request_picking" 
+                        confirm="Are you sure want to pickup request this order to Tokopedia?" 
+                        attrs="{'invisible': ['|', ('tp_order_id', '=', False), ('tp_order_status', '!=', 400)]}" 
+                        string="Tokopedia Request Pickup" 
+                        class="btn-primary" 
+                        type="object"
+                    />
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Tokopedia" name="tokopedia">
+                        <group>
+                            <group string="General Order Information">
+                                <field name="tp_id" string="Odoo Tokopedia" options="{'no_create_edit': True, 'no_quick_create': True}" invisible="1"/>
+                                <field name="tp_order_id" string="Order ID"/>
+                                <field name="tp_fs_id" string="APP/FS ID" invisible="1"/>
+                                <field name="tp_order_status" string="Order Status"/>
+                                <field name="request_pickup_tokopedia"/>
+                            </group>
+                            <group string="Seller Information">
+                                <field name="tp_shop_id" string="Shop ID"/>
+                                <field name="tp_seller_id" string="Seller ID" invisible="1"/>
+                                <field name="tp_shop_name" string="Shop Name"/>
+                                <field name="tp_shop_domain" string="Shop Domain"/>
+                                <field name="tp_shop_owner_email" string="Shop Email" invisible="1"/>
+                                <field name="tp_shop_owner_phone" string="Shop Phone" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Cancellation Request">
+                                <field name="tp_cancel_request_create_time"/>
+                                <field name="tp_cancel_request_reason"/>
+                                <field name="tp_cancel_request_status"/>
+                            </group>
+                            <group string="Shipping Information">
+                                <field name="tp_no_resi_shipping" string="Resi Number"/>
+                                <label for="shipping_label_text" string="Shipping Label"/>
+                                <div class="o_address_format">
+                                    <field name="shipping_label_text" filename="shipping_label" class="o_address_city"/>
+                                    <field name="shipping_label_data" invisible="1" class="o_address_city"/>
+                                    <button
+                                        style="border-radius: 10px !important; padding: 0.1rem 0.3rem !important; background-color: #cecefb !important"
+                                        name="shipping_label_view"
+                                        type="object"
+                                        class="o_address_state oe_stat_button"
+                                        attrs="{'invisible': [('shipping_label_data', '=', False)]}"
+                                        icon="fa-eye">
+                                    </button>
+                                    <button
+                                        style="border-radius: 10px !important; padding: 0.1rem 0.3rem !important; background-color: #cecefb !important"
+                                        name="shipping_label_download"
+                                        type="object"
+                                        class="o_address_state oe_stat_button"
+                                        attrs="{'invisible': [('shipping_label_data', '!=', False)]}"
+                                        icon="fa-download">
+                                    </button>
+                                </div>
+                                <button 
+                                    style="border-radius: 5px !important;"
+                                    name="button_show_ship_label" 
+                                    string="Direct Shipping Label" 
+                                    class="btn-primary" 
+                                    type="object"
+                                />
+                                <field name="show_html_text"/>
+                                <field name="tp_text_shipping_html" string="Shipping HTML" attrs="{'invisible': [('show_html_text', '=', False)]}"/>
+                            </group>
+                            <group string="Buyer Information" invisible="1">
+                                <field name="tp_buyer_id" string="Buyer ID"/>
+                                <field name="tp_buyer_fullname" string="Buyer Name"/>
+                                <field name="tp_buyer_email" string="Buyer Email"/>
+                                <field name="tp_buyer_phone" string="Buyer Phone"/>
+                            </group>
+                        </group>
+                        <group string="Invoice &amp; Payment Information">
+                            <label for="tp_invoice_number" string="Invoice Number"/>
+                            <div class="o_address_format">
+                                <field name="tp_invoice_number" filename="invoice_number" class="o_address_city"/>
+                                <field name="tp_invoice_url" invisible="1" class="o_address_city"/>
+                                <button
+                                    style="border-radius: 10px !important; padding: 0.1rem 0.3rem !important; background-color: #cecefb !important"
+                                    name="invoice_url_view"
+                                    type="object"
+                                    class="o_address_state oe_stat_button"
+                                    attrs="{'invisible': [('tp_invoice_url', '=', False)]}"
+                                    icon="fa-eye">
+                                </button>
+                            </div>
+                            <field name="tp_invoice_data" string="Invoice Data"/>
+                            <field name="tp_payment_number" string="Payment Number"/>
+                            <field name="tp_payment_status" string="Payment Status"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

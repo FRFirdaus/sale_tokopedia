@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_merchant_tokopedia,access_merchant_tokopedia,model_merchant_tokopedia,,1,1,1,1
+access_shop_tokopedia,access_shop_tokopedia,model_shop_tokopedia,,1,1,1,1
+access_whitelist_tokopedia,access_whitelist_tokopedia,model_whitelist_tokopedia,,1,1,1,1

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Tree view for the menuitem -->
+        <record id="merchant_tokopedia_tree" model="ir.ui.view">
+            <field name="name">merchant.tokopedia.tree</field>
+            <field name="model">merchant.tokopedia</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="fs_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view for the menuitem -->
+        <record id="merchant_tokopedia_form" model="ir.ui.view">
+            <field name="name">merchant.tokopedia.form</field>
+            <field name="model">merchant.tokopedia</field>
+            <field name="arch" type="xml">
+                <form string="Tokopedia Sync">
+                    <header>
+                        <button type="object" class="btn-primary" name="get_access_token" string="Access Token"/>
+                        <button type="object" class="btn-primary" name="button_sync_all_order" string="Get Orders"/>
+                        <button type="object" class="btn-primary" name="sync_shop" string="Get Shops"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="APP Name"/>
+                            <h1><field name="name" required="1" placeholder="APP Name"/></h1>
+                        </div>
+                        <group string="General">
+                            <group>
+                                <field name="fs_id"/>
+                                <field name="client_id"/>
+                                <field name="client_secret" password="1"/>
+                            </group>
+                            <group>
+                                <field name="access_token" readonly="1"/>
+                                <field name="token_type" readonly="1"/>
+                                <field name="expires_at"/>
+                                <field name="expires_in" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Orders Sync Time Interval">
+                                <field name="order_interval" widget="radio"/>
+                                <field name="order_from_date" attrs="{'invisible': [('order_interval', '!=', 0)], 'required': [('order_interval', '=', 0)]}"/>
+                                <field name="order_to_date" attrs="{'invisible': [('order_interval', '!=', 0)], 'required': [('order_interval', '=', 0)]}"/>
+                            </group>
+                            <group string="Whitelist IP Address">
+                                <label for="ip_public"/>
+                                <div class="o_address_format">
+                                    <field name="ip_public" style="width: 43% !important; margin-right: 5px !important" placeholder="192.168.1.1"/> 
+                                    <button style="line-height: 1.25 !important; margin-bottom: 3px !important;" name="insert_whitelist_ipaddress" type="object" class="oe_stat_button" icon="fa-solid fa-plus"/>
+                                    <button style="line-height: 1.25 !important; margin-bottom: 3px !important;" name="delete_whitelist_ipaddress" type="object" class="oe_stat_button" icon="fa-solid fa-minus"/>
+                                    <button style="line-height: 1.25 !important; margin-bottom: 3px !important;" name="get_whitelist_ipaddress" type="object" class="oe_stat_button" icon="fa-solid fa-repeat"/>
+                                </div>
+                                <field name="whitelist_ids" widget="many2many_tags" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Shop ID List">
+                                <field name="shop_tokopedia_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="shop_url"/>
+                                        <field name="shop_id"/>
+                                        <button style="line-height: 0.75 !important;" name="button_sync_order" type="object" class="btn btn-primary" string="Sync Order"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree view for the menuitem -->
+        <record id="shop_tokopedia_tree" model="ir.ui.view">
+            <field name="name">shop.tokopedia.tree</field>
+            <field name="model">shop.tokopedia</field>
+            <field name="arch" type="xml">
+                <tree create="0" edit="0" delete="0">
+                    <field name="name"/>
+                    <field name="shop_url"/>
+                    <field name="merchant_tokopedia_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="whitelist_tokopedia_tree" model="ir.ui.view">
+            <field name="name">whitelist.tokopedia.tree</field>
+            <field name="model">whitelist.tokopedia</field>
+            <field name="arch" type="xml">
+                <tree create="0" edit="0" delete="0">
+                    <field name="name"/>
+                    <field name="merchant_tokopedia_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="merchant_tokopedia_action">
+            <field name="name">Tokopedia Accounts</field>
+            <field name="res_model">merchant.tokopedia</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="shop_tokopedia_action">
+            <field name="name">Tokopedia Shops</field>
+            <field name="res_model">shop.tokopedia</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="whitelist_tokopedia_action">
+            <field name="name">Tokopedia IP Whitelist</field>
+            <field name="res_model">whitelist.tokopedia</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="merchant_tokopedia_menu" name="Tokopedia" sequence="200" groups="sale_tokopedia.group_tokopedia_admin_user" web_icon="sale_tokopedia,static/src/img/tokopedia_favicon.png"/>
+        
+        <menuitem id="sub_merchant_tokopedia_menu" parent="merchant_tokopedia_menu" name="Accounts" sequence="10" action="merchant_tokopedia_action" />
+        <menuitem id="sub_shop_tokopedia_menu" parent="merchant_tokopedia_menu" name="Shops" sequence="20" action="shop_tokopedia_action" />
+        <menuitem id="sub_whitelist_tokopedia_menu" parent="merchant_tokopedia_menu" name="IP Whitelist" sequence="30" action="whitelist_tokopedia_action" />
+    </data>
+</odoo>

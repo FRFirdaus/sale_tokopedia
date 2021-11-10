@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.module.category" id="tokopedia_group">
+        <field name="name">Tokopedia</field>
+        <field name="description">Access Right Tokopedia Integration</field>
+    </record>
+
+    <!-- Aflowz School Groups -->
+    <record id="group_tokopedia_admin_user" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="category_id" ref="tokopedia_group"/>
+        <field name="comment">The user will have access to Tokopedia integration.</field>
+    </record>
+</odoo>
