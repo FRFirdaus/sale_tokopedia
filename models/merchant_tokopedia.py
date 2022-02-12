@@ -12,6 +12,7 @@ import pytz
 import json
 import requests
 import pdfkit
+import time
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -369,6 +370,10 @@ class ShopTokopedia(models.Model):
             message = "Failed sync tokopedia orders: %s, response: %s" % (ex, response)
             self.merchant_tokopedia_id.message_post(body=message)
         else:
+            headers = r.headers
+            if headers.get('X-Ratelimit-Remaining') and headers.get('X-Ratelimit-Remaining') == '1':
+                time.sleep(1)
+
             datas = response.get('data') if r.status_code == 200 else []
             
             # data_res = datas if datas else odm.all_orders_dummy['data']
@@ -400,6 +405,10 @@ class ShopTokopedia(models.Model):
                                 message = "Failed sync tokopedia single existing order: %s, response: %s" % (ex, response)
                                 self.merchant_tokopedia_id.message_post(body=message)
                             else:
+                                headers = r.headers
+                                if headers.get('X-Ratelimit-Remaining') and headers.get('X-Ratelimit-Remaining') == '1':
+                                    time.sleep(1)
+
                                 detail_order = r.json() if r.status_code == 200 else {}
                                 detail_order = detail_order['data']
 
@@ -437,6 +446,10 @@ class ShopTokopedia(models.Model):
                             message = "Failed sync tokopedia single order: %s, response: %s" % (ex, response)
                             self.merchant_tokopedia_id.message_post(body=message)
                         else:
+                            headers = req.headers
+                            if headers.get('X-Ratelimit-Remaining') and headers.get('X-Ratelimit-Remaining') == '1':
+                                time.sleep(1)
+
                             datas_single = response.get('data') if req.status_code == 200 else {}
                             # if datas_single['order_status'] in [220, 400]:
                             if datas_single['order_status'] in [400]:
